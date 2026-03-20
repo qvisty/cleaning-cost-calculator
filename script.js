@@ -21,4 +21,26 @@ document.getElementById('hourlyRate').addEventListener('input', calculate);
 document.getElementById('timePerRoom').addEventListener('input', calculate);
 document.getElementById('numberOfRooms').addEventListener('input', calculate);
 
+// Set today's date as default
+const datoInput = document.getElementById('dato');
+if (!datoInput.value) {
+    datoInput.value = new Date().toISOString().split('T')[0];
+}
+
+document.getElementById('genererFaktura').addEventListener('click', function () {
+    const params = new URLSearchParams({
+        navn: document.getElementById('navn').value,
+        adresse: document.getElementById('adresse').value,
+        cpr: document.getElementById('cpr').value,
+        fakturaNr: document.getElementById('fakturaNr').value,
+        dato: document.getElementById('dato').value,
+        beskrivelse: document.getElementById('beskrivelse').value,
+        betalingsfrist: document.getElementById('betalingsfrist').value,
+        hourlyRate: document.getElementById('hourlyRate').value,
+        timePerRoom: document.getElementById('timePerRoom').value,
+        numberOfRooms: document.getElementById('numberOfRooms').value,
+    });
+    window.location.href = 'faktura.html?' + params.toString();
+});
+
 calculate();
