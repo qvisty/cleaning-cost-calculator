@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faktura</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f0f0;
+            padding: 40px 20px;
+            color: #222;
+        }
+
+        .invoice {
+            background: white;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 50px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border-radius: 4px;
+        }
+
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .invoice-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .invoice-meta {
+            text-align: right;
+            font-size: 14px;
+            line-height: 1.8;
+            color: #444;
+        }
+
+        .invoice-meta strong {
+            color: #222;
+        }
+
+        .parties {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .party h3 {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #999;
+            margin-bottom: 10px;
+        }
+
+        .party p {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #333;
+        }
+
+        .party p strong {
+            display: block;
+            font-size: 16px;
+            color: #222;
+            margin-bottom: 2px;
+        }
+
+        .ydelse {
+            margin-bottom: 30px;
+        }
+
+        .ydelse h3 {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #999;
+            margin-bottom: 8px;
+        }
+
+        .ydelse p {
+            font-size: 14px;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        thead tr {
+            background: #667eea;
+            color: white;
+        }
+
+        thead th {
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        thead th:last-child {
+            text-align: right;
+        }
+
+        tbody td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #eee;
+            color: #333;
+        }
+
+        tbody td:last-child {
+            text-align: right;
+            font-weight: 600;
+        }
+
+        .totals {
+            margin-left: auto;
+            width: 280px;
+            font-size: 14px;
+        }
+
+        .totals-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            color: #555;
+        }
+
+        .totals-row.final {
+            border-bottom: 2px solid #667eea;
+            border-top: 2px solid #667eea;
+            margin-top: 4px;
+            padding: 12px 0;
+            font-size: 16px;
+            font-weight: 700;
+            color: #222;
+        }
+
+        .payment-info {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            font-size: 13px;
+            color: #777;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn {
+            padding: 10px 22px;
+            font-size: 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .btn-back {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-print {
+            background: #667eea;
+            color: white;
+        }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .btn-row { display: none; }
+            .invoice { box-shadow: none; border-radius: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="btn-row">
+        <a href="index.html" class="btn btn-back">&#8592; Tilbage</a>
+        <button class="btn btn-print" onclick="window.print()">Udskriv / Gem som PDF</button>
+    </div>
+
+    <div class="invoice">
+        <div class="invoice-header">
+            <div class="invoice-title">FAKTURA</div>
+            <div class="invoice-meta">
+                <div><strong>Faktura nr.:</strong> <span id="fakturaNr"></span></div>
+                <div><strong>Dato:</strong> <span id="dato"></span></div>
+            </div>
+        </div>
+
+        <div class="parties">
+            <div class="party">
+                <h3>Fra</h3>
+                <p>
+                    <strong id="navn"></strong>
+                    <span id="adresse"></span><br>
+                    <span id="cprLinje"></span>
+                </p>
+            </div>
+            <div class="party">
+                <h3>Til</h3>
+                <p>
+                    <strong>Emmerske Efterskole</strong>
+                    Emmerske 7, 9500 Hobro
+                </p>
+            </div>
+        </div>
+
+        <div class="ydelse">
+            <h3>Ydelse</h3>
+            <p id="beskrivelse"></p>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Beskrivelse</th>
+                    <th>Timer</th>
+                    <th>Pris pr. time</th>
+                    <th>Beløb</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id="tabelBeskrivelse"></td>
+                    <td id="tabelTimer"></td>
+                    <td id="tabelTimepris"></td>
+                    <td id="tabelBeloeb"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="totals">
+            <div class="totals-row">
+                <span>Samlet beløb</span>
+                <span id="samletBeloeb"></span>
+            </div>
+            <div class="totals-row">
+                <span>Moms</span>
+                <span>0 kr (ikke momsregistreret)</span>
+            </div>
+            <div class="totals-row final">
+                <span>At betale</span>
+                <span id="atBetale"></span>
+            </div>
+        </div>
+
+        <div class="payment-info">
+            Betalingsfrist: <strong id="betalingsfrist"></strong> dage
+        </div>
+    </div>
+
+    <script>
+        function formatDKK(value) {
+            return value.toLocaleString('da-DK', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' kr';
+        }
+
+        function formatDate(isoDate) {
+            if (!isoDate) return '';
+            const [y, m, d] = isoDate.split('-');
+            const months = ['januar','februar','marts','april','maj','juni','juli','august','september','oktober','november','december'];
+            return parseInt(d) + '. ' + months[parseInt(m) - 1] + ' ' + y;
+        }
+
+        const p = new URLSearchParams(window.location.search);
+
+        const navn = p.get('navn') || '';
+        const adresse = p.get('adresse') || '';
+        const cpr = p.get('cpr') || '';
+        const fakturaNr = p.get('fakturaNr') || '001';
+        const dato = p.get('dato') || '';
+        const beskrivelse = p.get('beskrivelse') || 'Rengøring af elevværelser ifm. sommerklargøring';
+        const betalingsfrist = parseInt(p.get('betalingsfrist')) || 8;
+        const hourlyRate = parseFloat(p.get('hourlyRate')) || 0;
+        const timePerRoom = parseFloat(p.get('timePerRoom')) || 0;
+        const numberOfRooms = parseFloat(p.get('numberOfRooms')) || 0;
+
+        const totalHours = timePerRoom * numberOfRooms;
+        const totalPrice = totalHours * hourlyRate;
+
+        document.getElementById('fakturaNr').textContent = fakturaNr;
+        document.getElementById('dato').textContent = formatDate(dato);
+        document.getElementById('navn').textContent = navn;
+        document.getElementById('adresse').textContent = adresse;
+
+        const cprLinje = document.getElementById('cprLinje');
+        if (cpr) {
+            cprLinje.textContent = 'CPR: ' + cpr;
+        } else {
+            cprLinje.remove();
+        }
+
+        document.getElementById('beskrivelse').textContent = beskrivelse;
+
+        const roomWord = numberOfRooms === 1 ? 'værelse' : 'værelser';
+        document.getElementById('tabelBeskrivelse').textContent =
+            'Rengøring af ' + Math.round(numberOfRooms) + ' ' + roomWord;
+        document.getElementById('tabelTimer').textContent =
+            totalHours.toLocaleString('da-DK') + ' timer';
+        document.getElementById('tabelTimepris').textContent = formatDKK(hourlyRate);
+        document.getElementById('tabelBeloeb').textContent = formatDKK(totalPrice);
+        document.getElementById('samletBeloeb').textContent = formatDKK(totalPrice);
+        document.getElementById('atBetale').textContent = formatDKK(totalPrice);
+        document.getElementById('betalingsfrist').textContent = betalingsfrist;
+    </script>
+</body>
+</html>
