@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Rengøring Omkostninger Beregner</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Rengøring Omkostninger Beregner</h1>
+        
+        <p class="description">Beregn samlet tid og pris for rengøring baseret på timepris og antal værelser</p>
+        
+        <div class="form-group">
+            <label for="hourlyRate">Timepris (kr)</label>
+            <input 
+                type="number" 
+                id="hourlyRate" 
+                value="200" 
+                min="0" 
+                step="0.01"
+                placeholder="200"
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="timePerRoom">Tid pr. værelse (timer)</label>
+            <input 
+                type="number" 
+                id="timePerRoom" 
+                value="1" 
+                min="0" 
+                step="0.25"
+                placeholder="1"
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="numberOfRooms">Antal værelser</label>
+            <input 
+                type="number" 
+                id="numberOfRooms" 
+                value="25" 
+                min="0" 
+                step="1"
+                placeholder="25"
+            >
+        </div>
+
+        <div class="results">
+            <div class="result-item">
+                <span class="result-label">Samlet tid (timer)</span>
+                <span class="result-value" id="totalHours">25.00</span>
+            </div>
+            
+            <div class="result-item">
+                <span class="result-label">Samlet pris (kr)</span>
+                <span class="result-value" id="totalPrice">5.000,00</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
